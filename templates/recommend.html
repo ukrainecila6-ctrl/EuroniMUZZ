@@ -7,7 +7,7 @@
 </head>
 <body>
 <header class="top-nav">
-  <a href="{{ url_for('home') }}" class="nav-logo">🎵 Music Portal</a>
+  <a href="{{ url_for('home') }}" class="nav-logo">🎵 EuroniMUZZ</a>
   <nav>
     <a href="{{ url_for('index') }}" class="nav-link">Поиск</a>
     <a href="{{ url_for('recommend') }}" class="nav-link active">Рекомендации</a>
@@ -38,7 +38,7 @@
         <option value="angry">Раздраженное</option>
       </select>
     </label>
-    <label>Чем вы сейчас занимаетесь?:
+    <label>Занятие:
       <select name="activity">
         <option value="relaxing">Отдых</option>
         <option value="studying">Учёба</option>
@@ -48,7 +48,7 @@
         <option value="party">На вечеринке</option>
       </select>
     </label>
-    <label>Какое сейчас время суток?:
+    <label>Который час?:
       <select name="time">
         <option value="morning">Утро</option>
         <option value="day">День</option>
@@ -70,12 +70,10 @@
     <label> Направленность:
       <select name="purpose">
         <option value="alone">Один</option>
-        <option value="friends">С друзьями</option>
-        <option value="work">Для работы</option>
-        <option value="chill">Просто отдых</option>
+        <option value="friends">В компании</option>
       </select>
     </label>
-    <button type="submit" class="big-btn">Получить рекомендации</button>
+    <button type="submit" class="big-btn">Отправить анкету</button>
   </form>
 
   {% if recommendations %}
