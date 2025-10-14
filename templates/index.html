@@ -1,62 +1,37 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Поиск</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>EuroniMUZZ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<header class="top-nav">
-  <a href="{{ url_for('home') }}" class="nav-logo">🎵 EuroniMUZZ</a>
-  <nav>
-    <a href="{{ url_for('index') }}" class="nav-link active">Поиск</a>
-    <a href="{{ url_for('recommend') }}" class="nav-link">Рекомендации</a>
-  </nav>
-</header>
+    <header>
+        <h1>EuroniMUZZ</h1>
+        <form action="/search" method="post">
+            <input type="text" name="q" placeholder="Поиск песен..." value="{{ query or '' }}">
+            <button type="submit">Найти</button>
+        </form>
+        <a href="/recommend">Рекомендации</a>
+    </header>
 
-<div class="container">
-  <form method="POST" class="search-form">
-    <input type="text" name="query" placeholder="Название песни или исполнитель" value="{{ query }}">
-    <button type="submit" class="big-btn">🔍 Найти</button>
-  </form>
-
-  {% if songs %}
-  <div class="results">
-    {% for t in songs %}
-    <div class="card" data-preview="{{ t.previewUrl }}" data-title="{{ t.trackName }}" data-artist="{{ t.artistName }}" data-artwork="{{ t.artwork }}">
-      <img src="{{ t.artwork }}" alt="cover">
-      <div class="meta">
-        <strong>{{ t.trackName }}</strong><br>
-        <span>{{ t.artistName }}</span>
-      </div>
-      {% if t.previewUrl %}
-      <button class="play-btn">▶</button>
-      {% else %}
-      <button class="play-btn disabled" disabled>⛔</button>
-      {% endif %}
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-</div>
-
-<footer class="player-bar hidden" id="player-container">
-  <button id="prev-track">⏮</button>
-  <button id="playpause">▶</button>
-  <button id="next-track">⏭</button>
-  <img id="player-art" src="" alt="">
-  <div class="info">
-    <div id="player-title">—</div>
-    <div id="player-artist" class="muted">—</div>
-    <div class="progress-container">
-      <span id="current-time">0:00</span>
-      <input type="range" id="progress" value="0" min="0" step="1">
-      <span id="duration">0:00</span>
-    </div>
-  </div>
-  <audio id="audio" preload="metadata"></audio>
-</footer>
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+    <main>
+        {% if results %}
+            <h2>Результаты поиска:</h2>
+            <ul>
+                {% for track in results %}
+                    <li>
+                        <strong>{{ track.trackName }}</strong> — {{ track.artistName }}<br>
+                        <audio controls>
+                            <source src="{{ track.previewUrl }}" type="audio/mpeg">
+                        </audio>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif query %}
+            <p>Ничего не найдено по запросу "{{ query }}"</p>
+        {% endif %}
+    </main>
 </body>
 </html>
+

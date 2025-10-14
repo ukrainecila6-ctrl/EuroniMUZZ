@@ -1,118 +1,57 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Рекомендации</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>EuroniMUZZ — Рекомендации</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<header class="top-nav">
-  <a href="{{ url_for('home') }}" class="nav-logo">🎵 EuroniMUZZ</a>
-  <nav>
-    <a href="{{ url_for('index') }}" class="nav-link">Поиск</a>
-    <a href="{{ url_for('recommend') }}" class="nav-link active">Рекомендации</a>
-  </nav>
-</header>
+    <header>
+        <h1>EuroniMUZZ — Рекомендации</h1>
+        <a href="/">На главную</a>
+    </header>
 
-<div class="container">
-  <!-- Форма рекомендаций с выбором параметров -->
-  <form method="POST" class="search-form">
-    <label>Жанр:
-      <select name="genre">
-        <option value="pop">Поп</option>
-        <option value="rock">Рок</option>
-        <option value="hip hop">Хип хоп</option>
-        <option value="electronic">Электроника</option>
-        <option value="classical">Классика</option>
-        <option value="jazz">Джаз</option>
-        <option value="metal">Метал</option>
-      </select>
-    </label>
-    <label>Настроение:
-      <select name="mood">
-        <option value="happy">Счастливое</option>
-        <option value="sad">Грустное</option>
-        <option value="romantic">Романтическое</option>
-        <option value="calm">Спокойное</option>
-        <option value="energetic">Энергичное</option>
-        <option value="angry">Раздраженное</option>
-      </select>
-    </label>
-    <label>Занятие:
-      <select name="activity">
-        <option value="relaxing">Отдых</option>
-        <option value="studying">Учёба</option>
-        <option value="driving">За рулём</option>
-        <option value="training">Тренировка</option>
-        <option value="cleaning">Уборка</option>
-        <option value="party">На вечеринке</option>
-      </select>
-    </label>
-    <label>Который час?:
-      <select name="time">
-        <option value="morning">Утро</option>
-        <option value="day">День</option>
-        <option value="evening">Вечер</option>
-        <option value="night">Ночь</option>
-      </select>
-    </label>
-    <label>Из какой страны предпочитаете музыку?:
-      <select name="region">
-        <option value="us">США</option>
-        <option value="ru">Россия</option>
-        <option value="gb">Великобритания</option>
-        <option value="de">Германия</option>
-        <option value="fr">Франция</option>
-        <option value="jp">Япония</option>
-        <option value="kr">Корея</option>
-      </select>
-    </label>
-    <label> Направленность:
-      <select name="purpose">
-        <option value="alone">Один</option>
-        <option value="friends">В компании</option>
-      </select>
-    </label>
-    <button type="submit" class="big-btn">Отправить анкету</button>
-  </form>
+    <main>
+        <form method="post">
+            <label>Жанр:
+                <select name="genre">
+                    <option value="pop">Поп</option>
+                    <option value="rock">Рок</option>
+                    <option value="rap">Рэп</option>
+                    <option value="jazz">Джаз</option>
+                    <option value="classical">Классика</option>
+                </select>
+            </label>
+            <label>Настроение:
+                <select name="mood">
+                    <option value="happy">Весёлое</option>
+                    <option value="sad">Грустное</option>
+                    <option value="relax">Расслабляющее</option>
+                </select>
+            </label>
+            <label>Темп:
+                <select name="tempo">
+                    <option value="slow">Медленно</option>
+                    <option value="medium">Средне</option>
+                    <option value="fast">Быстро</option>
+                </select>
+            </label>
+            <button type="submit">Показать рекомендации</button>
+        </form>
 
-  {% if recommendations %}
-  <div class="results">
-    {% for t in recommendations %}
-    <div class="card" data-preview="{{ t.previewUrl }}" data-title="{{ t.trackName }}" data-artist="{{ t.artistName }}" data-artwork="{{ t.artwork }}">
-      <img src="{{ t.artwork }}" alt="cover">
-      <div class="meta">
-        <strong>{{ t.trackName }}</strong><br>
-        <span>{{ t.artistName }}</span>
-      </div>
-      {% if t.previewUrl %}
-      <button class="play-btn">▶</button>
-      {% else %}
-      <button class="play-btn disabled" disabled>⛔</button>
-      {% endif %}
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-</div>
-
-<footer class="player-bar hidden" id="player-container">
-  <button id="prev-track">⏮</button>
-  <button id="playpause">▶</button>
-  <button id="next-track">⏭</button>
-  <img id="player-art" src="" alt="">
-  <div class="info">
-    <div id="player-title">—</div>
-    <div id="player-artist" class="muted">—</div>
-    <div class="progress-container">
-      <span id="current-time">0:00</span>
-      <input type="range" id="progress" value="0" min="0" step="1">
-      <span id="duration">0:00</span>
-    </div>
-  </div>
-  <audio id="audio" preload="metadata"></audio>
-</footer>
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+        {% if recommendations %}
+            <h2>Рекомендованные треки:</h2>
+            <ul>
+                {% for track in recommendations %}
+                    <li>
+                        <strong>{{ track.trackName }}</strong> — {{ track.artistName }}<br>
+                        <audio controls>
+                            <source src="{{ track.previewUrl }}" type="audio/mpeg">
+                        </audio>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </main>
 </body>
 </html>
