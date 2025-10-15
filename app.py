@@ -24,16 +24,27 @@ def search():
 def recommend():
     # Получаем все параметры анкеты
     genre = request.form.get('genre') or 'pop'
-    mood = request.form.get('mood') or 'happy'
-    activity = request.form.get('activity') or 'rest'
     country = request.form.get('country') or 'USA'
-    people = request.form.get('people') or 'one'
-    time_of_day = request.form.get('time_of_day') or 'day'
+    mood = request.form.get('mood') or ''
+    activity = request.form.get('activity') or ''
+    people = request.form.get('people') or ''
+    time_of_day = request.form.get('time_of_day') or ''
 
-    # Создаём поисковый запрос с учётом всех факторов
-    search_terms = f"{genre} {mood} {activity} {country} {people} {time_of_day}"
+    # Основной поисковый запрос — жанр + страна
+    search_terms = f"{genre} {country}"
+
+    # Добавляем остальные параметры вторично
+    if mood:
+        search_terms += f" {mood}"
+    if activity:
+        search_terms += f" {activity}"
+    if people:
+        search_terms += f" {people}"
+    if time_of_day:
+        search_terms += f" {time_of_day}"
+
     url = "https://itunes.apple.com/search"
-    params = {'term': search_terms, 'media': 'music', 'limit': 30}  # больше треков
+    params = {'term': search_terms, 'media': 'music', 'limit': 15}
     response = requests.get(url, params=params)
 
     recommendations = []
