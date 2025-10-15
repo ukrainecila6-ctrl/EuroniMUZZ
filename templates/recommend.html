@@ -9,69 +9,71 @@
 <body>
 <header>
 <h1>EuroniMUZZ — Рекомендации</h1>
-<a href="{{ url_for('index') }}">На главную</a>
+<a href="{{ url_for('index') }}" class="btn">На главную</a>
 </header>
 
 <main>
-<form method="post">
-    <label>Жанр:
-        <select name="genre">
-            <option value="pop">Поп</option>
-            <option value="rap">Рэп</option>
-            <option value="hip-hop">Хип-хоп</option>
-            <option value="rock">Рок</option>
-            <option value="metal">Метал</option>
-            <option value="jazz">Джаз</option>
-        </select>
-    </label>
-    <label>Настроение:
-        <select name="mood">
-            <option value="happy">Весёлое</option>
-            <option value="sad">Грустное</option>
-            <option value="angry">Злостное</option>
-            <option value="neutral">Нейтральное</option>
-        </select>
-    </label>
-    <label>Занятие:
-        <select name="activity">
-            <option value="rest">Отдых</option>
-            <option value="workout">Тренировка</option>
-            <option value="trip">Поездка</option>
-            <option value="study">Учёба</option>
-        </select>
-    </label>
-    <label>Страна:
-        <select name="country">
-            <option value="Russia">Россия</option>
-            <option value="USA">США</option>
-            <option value="Japan">Япония</option>
-            <option value="UK">Великобритания</option>
-            <option value="Canada">Канада</option>
-            <option value="Norway">Норвегия</option>
-            <option value="Finland">Финляндия</option>
-            <option value="Other">Другое</option>
-        </select>
-    </label>
-    <label>Сколько вас человек?
-        <select name="people">
-            <option value="one">Один</option>
-            <option value="group">В компании</option>
-        </select>
-    </label>
-    <label>Время суток:
-        <select name="time_of_day">
-            <option value="morning">Утро</option>
-            <option value="day">День</option>
-            <option value="evening">Вечер</option>
-            <option value="night">Ночь</option>
-        </select>
-    </label>
-    <button type="submit">Показать рекомендации</button>
+<form method="post" class="recommend-form">
+    <div class="form-group">
+        <label>Жанр:
+            <select name="genre">
+                <option value="pop">Поп</option>
+                <option value="rap">Рэп</option>
+                <option value="hip-hop">Хип-хоп</option>
+                <option value="rock">Рок</option>
+                <option value="metal">Метал</option>
+                <option value="jazz">Джаз</option>
+            </select>
+        </label>
+        <label>Настроение:
+            <select name="mood">
+                <option value="happy">Весёлое</option>
+                <option value="sad">Грустное</option>
+                <option value="angry">Злостное</option>
+                <option value="neutral">Нейтральное</option>
+            </select>
+        </label>
+        <label>Занятие:
+            <select name="activity">
+                <option value="rest">Отдых</option>
+                <option value="workout">Тренировка</option>
+                <option value="trip">Поездка</option>
+                <option value="study">Учёба</option>
+            </select>
+        </label>
+        <label>Страна:
+            <select name="country">
+                <option value="Russia">Россия</option>
+                <option value="USA">США</option>
+                <option value="Japan">Япония</option>
+                <option value="UK">Великобритания</option>
+                <option value="Canada">Канада</option>
+                <option value="Norway">Норвегия</option>
+                <option value="Finland">Финляндия</option>
+                <option value="Other">Другое</option>
+            </select>
+        </label>
+        <label>Сколько вас человек?
+            <select name="people">
+                <option value="one">Один</option>
+                <option value="group">В компании</option>
+            </select>
+        </label>
+        <label>Время суток:
+            <select name="time_of_day">
+                <option value="morning">Утро</option>
+                <option value="day">День</option>
+                <option value="evening">Вечер</option>
+                <option value="night">Ночь</option>
+            </select>
+        </label>
+    </div>
+    <button type="submit" class="btn">Показать рекомендации</button>
 </form>
 
 {% if recommendations %}
 <h2>Рекомендованные треки:</h2>
-<ul id="recTrackList">
+<ul id="recTrackList" class="track-list">
     {% for track in recommendations %}
     <li data-src="{{ track.previewUrl }}">
         <strong>{{ track.trackName }}</strong> — {{ track.artistName }}

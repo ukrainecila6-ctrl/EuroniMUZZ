@@ -9,17 +9,17 @@
 <body>
 <header>
     <h1>EuroniMUZZ</h1>
-    <form action="/search" method="post">
+    <form action="/search" method="post" class="search-form">
         <input type="text" name="q" placeholder="Поиск песен..." value="{{ query or '' }}">
         <button type="submit">Найти</button>
     </form>
-    <a href="{{ url_for('recommend') }}">Рекомендации</a>
+    <a href="{{ url_for('recommend') }}" class="btn">Рекомендации</a>
 </header>
 
 <main>
 {% if results %}
 <h2>Результаты поиска:</h2>
-<ul id="trackList">
+<ul id="trackList" class="track-list">
     {% for track in results %}
     <li data-src="{{ track.previewUrl }}">
         <strong>{{ track.trackName }}</strong> — {{ track.artistName }}
@@ -41,4 +41,3 @@
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-

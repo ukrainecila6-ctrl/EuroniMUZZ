@@ -22,7 +22,6 @@ def search():
 
 @app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
-    # Получаем все параметры анкеты
     genre = request.form.get('genre') or 'pop'
     mood = request.form.get('mood') or 'happy'
     activity = request.form.get('activity') or 'rest'
@@ -30,7 +29,6 @@ def recommend():
     people = request.form.get('people') or 'one'
     time_of_day = request.form.get('time_of_day') or 'day'
 
-    # Генерируем поисковый запрос для iTunes API
     search_terms = f"{genre} {mood} {activity}"
     url = "https://itunes.apple.com/search"
     params = {'term': search_terms, 'media': 'music', 'limit': 10}

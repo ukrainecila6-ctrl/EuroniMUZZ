@@ -1,20 +1,165 @@
-body { font-family:'Arial',sans-serif; background:#121212; color:#fff; margin:0; padding:0; }
-header { background:#1DB954; padding:20px; text-align:center; display:flex; flex-direction:column; align-items:center; }
-header h1 { margin:0 0 10px 0; font-size:36px; }
-header form { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
-header input[type="text"] { padding:10px; width:250px; max-width:90%; border:none; border-radius:5px; margin-bottom:5px; }
-header button { padding:10px 15px; border:none; border-radius:5px; background:#fff; color:#1DB954; font-weight:bold; cursor:pointer; margin-left:5px; }
-header a { display:inline-block; margin-top:5px; color:#fff; font-weight:bold; text-decoration:none; }
-main { padding:20px; }
-ul { list-style:none; padding:0; }
-li { background:#1e1e1e; margin-bottom:15px; padding:15px; border-radius:8px; cursor:pointer; }
-audio { width:100%; margin-top:10px; }
+/* Общие стили */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #121212;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
 
-/* Главный плеер и плеер рекомендаций */
-#player, #recPlayer { display:flex; align-items:center; justify-content:center; gap:10px; background:#1DB954; padding:10px; border-radius:8px; margin-top:20px; }
-#player.hidden, #recPlayer.hidden { display:none; }
-#progress, #recProgress { width:200px; }
+header {
+    background: linear-gradient(90deg, #1DB954, #1ed760);
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0 0 15px 0;
+    font-size: 36px;
+}
+
+header .search-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+header input[type="text"] {
+    padding: 10px;
+    width: 250px;
+    max-width: 90%;
+    border: none;
+    border-radius: 5px;
+}
+
+header button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    color: #1DB954;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+header button:hover {
+    background: #f0f0f0;
+}
+
+header a.btn {
+    margin-top: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 15px;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+header a.btn:hover {
+    background: #fff;
+    color: #1DB954;
+}
+
+/* Main */
+main {
+    padding: 20px;
+}
+
+.track-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.track-list li {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.track-list li:hover {
+    background: #2e2e2e;
+}
+
+/* Плееры */
+#player, #recPlayer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #1DB954;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+#player.hidden, #recPlayer.hidden {
+    display: none;
+}
+
+#progress, #recProgress {
+    width: 200px;
+}
+
+/* Форма рекомендаций */
+.recommend-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.recommend-form .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.recommend-form select {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #1e1e1e;
+    color: #fff;
+}
+
+.recommend-form button.btn {
+    align-self: center;
+    padding: 10px 25px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    background: #1DB954;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.recommend-form button.btn:hover {
+    background: #17a44d;
+}
 
 /* Адаптивность */
-@media(max-width:768px){ header h1{font-size:28px;} header form{flex-direction:column;} header input[type="text"],header button{width:90%; margin:5px 0;} }
-@media(max-width:480px){ header h1{font-size:24px;} main{padding:10px;} li{padding:10px;} }
+@media(max-width:768px){
+    header h1{font-size:28px;}
+    .recommend-form .form-group{flex-direction:column; align-items:center;}
+    header .search-form{flex-direction:column;}
+    header input[type="text"], header button{width:90%;}
+}
+@media(max-width:480px){
+    header h1{font-size:24px;}
+    main{padding:10px;}
+    .track-list li{padding:10px;}
+}
