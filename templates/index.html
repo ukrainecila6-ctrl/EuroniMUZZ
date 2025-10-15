@@ -8,20 +8,23 @@
 </head>
 <body>
 <header>
-    <h1>EuroniMUZZ — Поиск</h1>
+    <h1>Поиск музыки</h1>
     <form action="/search" method="post" class="search-form">
-        <input type="text" name="q" placeholder="Поиск песен..." value="{{ query or '' }}">
+        <input type="text" name="q" placeholder="Введите название или исполнителя" value="{{ query or '' }}">
         <button type="submit">Найти</button>
     </form>
     <a href="{{ url_for('home') }}" class="btn">На главную</a>
 </header>
 <main>
 {% if results %}
-<h2>Результаты поиска:</h2>
 <ul id="trackList" class="track-list">
     {% for track in results %}
     <li data-src="{{ track.previewUrl }}">
-        <strong>{{ track.trackName }}</strong> — {{ track.artistName }}
+        <img src="{{ track.artworkUrl100 }}" alt="Обложка" class="track-cover">
+        <div>
+            <strong>{{ track.trackName }}</strong><br>
+            {{ track.artistName }}
+        </div>
     </li>
     {% endfor %}
 </ul>
