@@ -1,68 +1,20 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #121212;
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
-}
+body { font-family:'Arial',sans-serif; background:#121212; color:#fff; margin:0; padding:0; }
+header { background:#1DB954; padding:20px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+header h1 { margin:0 0 10px 0; font-size:36px; }
+header form { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
+header input[type="text"] { padding:10px; width:250px; max-width:90%; border:none; border-radius:5px; margin-bottom:5px; }
+header button { padding:10px 15px; border:none; border-radius:5px; background:#fff; color:#1DB954; font-weight:bold; cursor:pointer; margin-left:5px; }
+header a { display:inline-block; margin-top:5px; color:#fff; font-weight:bold; text-decoration:none; }
+main { padding:20px; }
+ul { list-style:none; padding:0; }
+li { background:#1e1e1e; margin-bottom:15px; padding:15px; border-radius:8px; cursor:pointer; }
+audio { width:100%; margin-top:10px; }
 
-header {
-    background-color: #1DB954;
-    padding: 20px;
-    text-align: center;
-}
+/* Главный плеер и плеер рекомендаций */
+#player, #recPlayer { display:flex; align-items:center; justify-content:center; gap:10px; background:#1DB954; padding:10px; border-radius:8px; margin-top:20px; }
+#player.hidden, #recPlayer.hidden { display:none; }
+#progress, #recProgress { width:200px; }
 
-header h1 {
-    margin: 0;
-    font-size: 36px;
-}
-
-header form {
-    margin-top: 10px;
-}
-
-header input[type="text"] {
-    padding: 10px;
-    width: 250px;
-    border: none;
-    border-radius: 5px;
-}
-
-header button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: #1DB954;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-header a {
-    display: inline-block;
-    margin-left: 20px;
-    color: #ffffff;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-main {
-    padding: 20px;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background-color: #1e1e1e;
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-audio {
-    width: 100%;
-    margin-top: 10px;
-}
+/* Адаптивность */
+@media(max-width:768px){ header h1{font-size:28px;} header form{flex-direction:column;} header input[type="text"],header button{width:90%; margin:5px 0;} }
+@media(max-width:480px){ header h1{font-size:24px;} main{padding:10px;} li{padding:10px;} }

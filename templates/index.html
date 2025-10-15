@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>EuroniMUZZ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EuroniMUZZ</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>EuroniMUZZ</h1>
-        <form action="/search" method="post">
-            <input type="text" name="q" placeholder="Поиск песен..." value="{{ query or '' }}">
-            <button type="submit">Найти</button>
-        </form>
-        <a href="/recommend">Рекомендации</a>
-    </header>
+<header>
+    <h1>EuroniMUZZ</h1>
+    <form action="/search" method="post">
+        <input type="text" name="q" placeholder="Поиск песен..." value="{{ query or '' }}">
+        <button type="submit">Найти</button>
+    </form>
+    <a href="{{ url_for('recommend') }}">Рекомендации</a>
+</header>
 
-    <main>
-        {% if results %}
-            <h2>Результаты поиска:</h2>
-            <ul>
-                {% for track in results %}
-                    <li>
-                        <strong>{{ track.trackName }}</strong> — {{ track.artistName }}<br>
-                        <audio controls>
-                            <source src="{{ track.previewUrl }}" type="audio/mpeg">
-                        </audio>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% elif query %}
-            <p>Ничего не найдено по запросу "{{ query }}"</p>
-        {% endif %}
-    </main>
+<main>
+{% if results %}
+<h2>Результаты поиска:</h2>
+<ul id="trackList">
+    {% for track in results %}
+    <li data-src="{{ track.previewUrl }}">
+        <strong>{{ track.trackName }}</strong> — {{ track.artistName }}
+    </li>
+    {% endfor %}
+</ul>
+
+<div id="player" class="hidden">
+    <button id="prev">⏮️</button>
+    <button id="playPause">▶️</button>
+    <button id="next">⏭️</button>
+    <span id="currentTime">0:00</span>
+    <input type="range" id="progress" value="0" min="0" max="100">
+    <span id="duration">0:00</span>
+</div>
+{% endif %}
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
 

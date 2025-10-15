@@ -3,43 +3,37 @@ import requests
 
 app = Flask(__name__)
 
-# Титульная страница
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Поиск песен через iTunes API
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get('q') or request.form.get('q')
     results = []
     if query:
         url = f"https://itunes.apple.com/search"
-        params = {
-            'term': query,
-            'media': 'music',
-            'limit': 20
-        }
+        params = {'term': query, 'media': 'music', 'limit': 20}
         response = requests.get(url, params=params)
         if response.status_code == 200:
             data = response.json()
             results = data.get('results', [])
     return render_template('index.html', results=results, query=query)
 
-# Рекомендации на основе жанра и других факторов
 @app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
+    # Получаем все параметры анкеты
     genre = request.form.get('genre') or 'pop'
     mood = request.form.get('mood') or 'happy'
-    tempo = request.form.get('tempo') or 'medium'
+    activity = request.form.get('activity') or 'rest'
+    country = request.form.get('country') or 'USA'
+    people = request.form.get('people') or 'one'
+    time_of_day = request.form.get('time_of_day') or 'day'
 
-    # Простейший пример рекомендаций: ищем песни по жанру и слову настроения
-    url = f"https://itunes.apple.com/search"
-    params = {
-        'term': f"{genre} {mood}",
-        'media': 'music',
-        'limit': 10
-    }
+    # Генерируем поисковый запрос для iTunes API
+    search_terms = f"{genre} {mood} {activity}"
+    url = "https://itunes.apple.com/search"
+    params = {'term': search_terms, 'media': 'music', 'limit': 10}
     response = requests.get(url, params=params)
     recs = response.json().get('results', []) if response.status_code == 200 else []
 
