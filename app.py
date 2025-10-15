@@ -4,15 +4,16 @@ import requests
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    # Титульная страница
+    return render_template('home.html')
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get('q') or request.form.get('q')
     results = []
     if query:
-        url = f"https://itunes.apple.com/search"
+        url = "https://itunes.apple.com/search"
         params = {'term': query, 'media': 'music', 'limit': 20}
         response = requests.get(url, params=params)
         if response.status_code == 200:
