@@ -1,20 +1,45 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EuroniMUZZ</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EuroniMUZZ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-<header>
+  <header>
     <h1>EuroniMUZZ</h1>
-    <p>Музыка для любого настроения и занятия</p>
-    <div class="home-buttons">
-        <a href="{{ url_for('search') }}" class="btn">Поиск музыки</a>
-        <a href="{{ url_for('recommend') }}" class="btn">Рекомендации</a>
-    </div>
-</header>
-<main></main>
+    <p>Музыка для твоего настроения</p>
+    <a href="{{ url_for('search') }}" class="btn">Поиск</a>
+    <a href="{{ url_for('recommend') }}" class="btn">Рекомендации</a>
+  </header>
+
+  <main>
+    <section>
+      <h2>🔥 Популярное прямо сейчас</h2>
+      <ul class="top-list">
+        {% for song in top_songs %}
+          <li class="track-card">
+            <img src="{{ song.artworkUrl100 }}" alt="{{ song.name }}">
+            <strong>{{ song.name }}</strong><br>
+            <span>{{ song.artistName }}</span><br>
+            <button
+              class="btn track-button"
+              data-url="{{ song.url }}"
+              data-name="{{ song.name }}"
+              data-artist="{{ song.artistName }}"
+              data-cover="{{ song.artworkUrl100 }}"
+              onclick="playTrack('{{ song.url }}', '{{ song.name }}', '{{ song.artistName }}', '{{ song.artworkUrl100 }}', {{ loop.index0 }})">
+              ▶️ Слушать
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </main>
+
+  {% include 'player.html' %}
+  <footer>© 2025 EuroniMUZZ</footer>
 </body>
 </html>

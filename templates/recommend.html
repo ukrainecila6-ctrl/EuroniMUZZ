@@ -1,98 +1,100 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Рекомендации — EuroniMUZZ</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рекомендации | EuroniMUZZ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-<header>
-<h1>Рекомендации</h1>
-<a href="{{ url_for('home') }}" class="btn">На главную</a>
-</header>
-<main>
-<form method="post" class="recommend-form">
-    <div class="form-group">
-        <label>Жанр:
-            <select name="genre">
-                <option value="pop">Поп</option>
-                <option value="rap">Рэп</option>
-                <option value="hip-hop">Хип-хоп</option>
-                <option value="rock">Рок</option>
-                <option value="metal">Метал</option>
-                <option value="jazz">Джаз</option>
-            </select>
-        </label>
-        <label>Настроение:
-            <select name="mood">
-                <option value="happy">Весёлое</option>
-                <option value="sad">Грустное</option>
-                <option value="angry">Злостное</option>
-                <option value="neutral">Нейтральное</option>
-            </select>
-        </label>
-        <label>Занятие:
-            <select name="activity">
-                <option value="rest">Отдых</option>
-                <option value="workout">Тренировка</option>
-                <option value="trip">Поездка</option>
-                <option value="study">Учёба</option>
-            </select>
-        </label>
-        <label>Страна:
-            <select name="country">
-                <option value="Russia">Россия</option>
-                <option value="USA">США</option>
-                <option value="Japan">Япония</option>
-                <option value="UK">Великобритания</option>
-                <option value="Canada">Канада</option>
-                <option value="Norway">Норвегия</option>
-                <option value="Finland">Финляндия</option>
-                <option value="Other">Другое</option>
-            </select>
-        </label>
-        <label>Сколько вас человек?
-            <select name="people">
-                <option value="one">Один</option>
-                <option value="group">В компании</option>
-            </select>
-        </label>
-        <label>Время суток:
-            <select name="time_of_day">
-                <option value="morning">Утро</option>
-                <option value="day">День</option>
-                <option value="evening">Вечер</option>
-                <option value="night">Ночь</option>
-            </select>
-        </label>
-    </div>
-    <button type="submit" class="btn">Показать рекомендации</button>
-</form>
+  <header>
+    <h1>Рекомендации</h1>
+    <a href="{{ url_for('home') }}" class="btn">Главная</a>
+    <a href="{{ url_for('search') }}" class="btn">Поиск</a>
+  </header>
 
-{% if recommendations %}
-<ul id="recTrackList" class="track-list">
-    {% for track in recommendations %}
-    <li data-src="{{ track.previewUrl }}">
-        <img src="{{ track.artworkUrl100 }}" alt="Обложка" class="track-cover">
-        <div>
-            <strong>{{ track.trackName }}</strong><br>
-            {{ track.artistName }}
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+  <main>
+    <form method="post">
+      <label>Жанр:
+        <select name="genre">
+          <option>Поп</option>
+          <option>Рэп</option>
+          <option>Хип-хоп</option>
+          <option>Рок</option>
+          <option>Метал</option>
+          <option>Джаз</option>
+        </select>
+      </label>
+      <label>Настроение:
+        <select name="mood">
+          <option>Весёлое</option>
+          <option>Грустное</option>
+          <option>Злостное</option>
+          <option>Нейтральное</option>
+        </select>
+      </label>
+      <label>Занятие:
+        <select name="activity">
+          <option>Отдых</option>
+          <option>Тренировка</option>
+          <option>Поездка</option>
+          <option>Учёба</option>
+        </select>
+      </label>
+      <label>Страна:
+        <select name="country">
+          <option>Россия</option>
+          <option>США</option>
+          <option>Япония</option>
+          <option>Великобритания</option>
+          <option>Канада</option>
+          <option>Норвегия</option>
+          <option>Финляндия</option>
+          <option>Другое</option>
+        </select>
+      </label>
+      <label>Сколько вас человек?
+        <select name="company">
+          <option>Один</option>
+          <option>В компании</option>
+        </select>
+      </label>
+      <label>Время суток:
+        <select name="time">
+          <option>Утро</option>
+          <option>День</option>
+          <option>Вечер</option>
+          <option>Ночь</option>
+        </select>
+      </label>
+      <button class="btn" type="submit">Получить рекомендации</button>
+    </form>
 
-<div id="recPlayer" class="hidden">
-    <button id="recPrev">⏮️</button>
-    <button id="recPlayPause">▶️</button>
-    <button id="recNext">⏭️</button>
-    <span id="recCurrentTime">0:00</span>
-    <input type="range" id="recProgress" value="0" min="0" max="100">
-    <span id="recDuration">0:00</span>
-</div>
-{% endif %}
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-</main>
+    {% if recommendations %}
+    <h2>🎧 Рекомендованные треки</h2>
+    <ul class="recommend-list">
+      {% for song in recommendations %}
+        <li class="track-card">
+          <img src="{{ song.artworkUrl100 }}" alt="{{ song.trackName }}">
+          <strong>{{ song.trackName }}</strong><br>
+          <span>{{ song.artistName }}</span><br>
+          <button
+            class="btn track-button"
+            data-url="{{ song.previewUrl }}"
+            data-name="{{ song.trackName }}"
+            data-artist="{{ song.artistName }}"
+            data-cover="{{ song.artworkUrl100 }}"
+            onclick="playTrack('{{ song.previewUrl }}', '{{ song.trackName }}', '{{ song.artistName }}', '{{ song.artworkUrl100 }}', {{ loop.index0 }})">
+            ▶️ Слушать
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </main>
+
+  {% include 'player.html' %}
+  <footer>© 2025 EuroniMUZZ</footer>
 </body>
 </html>

@@ -1,73 +1,66 @@
-// --- Общий плеер ---
-function setupPlayer(trackListId, playerId, playPauseId, prevId, nextId, progressId, currentTimeId, durationId) {
-    const trackList = document.getElementById(trackListId);
-    const player = document.getElementById(playerId);
-    const playPauseBtn = document.getElementById(playPauseId);
-    const prevBtn = document.getElementById(prevId);
-    const nextBtn = document.getElementById(nextId);
-    const progress = document.getElementById(progressId);
-    const currentTimeEl = document.getElementById(currentTimeId);
-    const durationEl = document.getElementById(durationId);
+let playlist = [];
+let currentIndex = 0;
+let audio = null;
+let isShuffle = false;
+let isRepeat = false;
 
-    if (!trackList) return;
+function playTrack(previewUrl, name, artist, coverUrl, index = 0) {
+  const playerBar = document.getElementById('player-bar');
+  const info = document.getElementById('player-info');
+  const cover = document.getElementById('player-cover');
+  const audioEl = document.getElementById('player-audio');
 
-    let tracks = Array.from(trackList.children);
-    let currentIndex = 0;
-    let audio = new Audio();
-    let isPlaying = false;
+  playlist = Array.from(document.querySelectorAll('.track-button')).map(btn => ({
+    previewUrl: btn.dataset.url,
+    name: btn.dataset.name,
+    artist: btn.dataset.artist,
+    cover: btn.dataset.cover
+  }));
 
-    function playTrack() {
-        audio.src = tracks[currentIndex].dataset.src;
-        audio.play();
-        isPlaying = true;
-        playPauseBtn.textContent = '⏸️';
-        player.classList.remove('hidden'); // показываем плеер при воспроизведении
-    }
+  currentIndex = index;
 
-    tracks.forEach((li, i) => {
-        li.addEventListener('click', () => {
-            currentIndex = i;
-            playTrack();
-        });
-    });
+  cover.src = coverUrl;
+  info.innerHTML = `<strong>${name}</strong><br><span>${artist}</span>`;
+  audioEl.src = previewUrl;
+  playerBar.classList.add('active');
 
-    if (playPauseBtn) playPauseBtn.addEventListener('click', () => {
-        if (isPlaying) { audio.pause(); playPauseBtn.textContent = '▶️'; }
-        else { audio.play(); playPauseBtn.textContent = '⏸️'; }
-        isPlaying = !isPlaying;
-    });
-
-    if (prevBtn) prevBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-        playTrack();
-    });
-
-    if (nextBtn) nextBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % tracks.length;
-        playTrack();
-    });
-
-    audio.addEventListener('timeupdate', () => {
-        if (!audio.duration) return;
-        const percent = (audio.currentTime / audio.duration) * 100;
-        if (progress) progress.value = percent;
-        if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
-        if (durationEl) durationEl.textContent = formatTime(audio.duration);
-    });
-
-    if (progress) progress.addEventListener('input', () => {
-        audio.currentTime = (progress.value / 100) * audio.duration;
-    });
+  audio = audioEl;
+  audio.play();
 }
 
-// --- Вспомогательная функция ---
-function formatTime(sec){
-    if(isNaN(sec)) return '0:00';
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return `${m}:${s<10?'0':''}${s}`;
+function playPause() {
+  if (audio.paused) audio.play();
+  else audio.pause();
 }
 
-// --- Инициализация плееров ---
-setupPlayer('trackList','player','playPause','prev','next','progress','currentTime','duration');
-setupPlayer('recTrackList','recPlayer','recPlayPause','recPrev','recNext','recProgress','recCurrentTime','recDuration');
+function nextTrack() {
+  currentIndex = isShuffle ? Math.floor(Math.random() * playlist.length)
+                           : (currentIndex + 1) % playlist.length;
+  const track = playlist[currentIndex];
+  playTrack(track.previewUrl, track.name, track.artist, track.cover, currentIndex);
+}
+
+function prevTrack() {
+  currentIndex = isShuffle ? Math.floor(Math.random() * playlist.length)
+                           : (currentIndex - 1 + playlist.length) % playlist.length;
+  const track = playlist[currentIndex];
+  playTrack(track.previewUrl, track.name, track.artist, track.cover, currentIndex);
+}
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('shuffle-btn').classList.toggle('active', isShuffle);
+}
+
+function toggleRepeat() {
+  isRepeat = !isRepeat;
+  document.getElementById('repeat-btn').classList.toggle('active', isRepeat);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const audioEl = document.getElementById('player-audio');
+  audioEl.addEventListener('ended', () => {
+    if (isRepeat) audioEl.play();
+    else nextTrack();
+  });
+});

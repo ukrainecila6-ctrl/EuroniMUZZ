@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EuroniMUZZ — Поиск</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск | EuroniMUZZ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-<header>
+  <header>
     <h1>Поиск музыки</h1>
-    <form action="/search" method="post" class="search-form">
-        <input type="text" name="q" placeholder="Введите название или исполнителя" value="{{ query or '' }}">
-        <button type="submit">Найти</button>
-    </form>
-    <a href="{{ url_for('home') }}" class="btn">На главную</a>
-</header>
-<main>
-{% if results %}
-<ul id="trackList" class="track-list">
-    {% for track in results %}
-    <li data-src="{{ track.previewUrl }}">
-        <img src="{{ track.artworkUrl100 }}" alt="Обложка" class="track-cover">
-        <div>
-            <strong>{{ track.trackName }}</strong><br>
-            {{ track.artistName }}
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+    <a href="{{ url_for('home') }}" class="btn">Главная</a>
+    <a href="{{ url_for('recommend') }}" class="btn">Рекомендации</a>
+  </header>
 
-<div id="player" class="hidden">
-    <button id="prev">⏮️</button>
-    <button id="playPause">▶️</button>
-    <button id="next">⏭️</button>
-    <span id="currentTime">0:00</span>
-    <input type="range" id="progress" value="0" min="0" max="100">
-    <span id="duration">0:00</span>
-</div>
-{% endif %}
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-</main>
+  <main>
+    <form method="post">
+      <input type="text" name="q" placeholder="Введите название или исполнителя" value="{{ query or '' }}" required>
+      <button class="btn" type="submit">🔍 Найти</button>
+    </form>
+
+    {% if results %}
+    <ul class="search-results">
+      {% for song in results %}
+        <li class="track-card">
+          <img src="{{ song.artworkUrl100 }}" alt="{{ song.trackName }}">
+          <strong>{{ song.trackName }}</strong><br>
+          <span>{{ song.artistName }}</span><br>
+          <button
+            class="btn track-button"
+            data-url="{{ song.previewUrl }}"
+            data-name="{{ song.trackName }}"
+            data-artist="{{ song.artistName }}"
+            data-cover="{{ song.artworkUrl100 }}"
+            onclick="playTrack('{{ song.previewUrl }}', '{{ song.trackName }}', '{{ song.artistName }}', '{{ song.artworkUrl100 }}', {{ loop.index0 }})">
+            ▶️ Слушать
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </main>
+
+  {% include 'player.html' %}
+  <footer>© 2025 EuroniMUZZ</footer>
 </body>
 </html>

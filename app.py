@@ -3,94 +3,67 @@ import requests
 
 app = Flask(__name__)
 
+def search_itunes(query, limit=25):
+    url = "https://itunes.apple.com/search"
+    params = {"term": query, "media": "music", "limit": limit}
+    r = requests.get(url, params=params)
+    if r.status_code == 200:
+        return r.json().get("results", [])
+    return []
+
+def get_itunes_top_songs(region="us", limit=20):
+    url = f"https://rss.itunes.apple.com/api/v1/{region}/itunes-music/top-songs/all/{limit}/explicit.json"
+    resp = requests.get(url, timeout=5)
+    if resp.status_code == 200:
+        data = resp.json()
+        results = data.get("feed", {}).get("results", [])
+        filtered = []
+        for song in results:
+            if song.get("name") and song.get("artistName") and song.get("artworkUrl100"):
+                preview = search_itunes(f"{song['name']} {song['artistName']}", limit=1)
+                if preview and preview[0].get("previewUrl"):
+                    song['previewUrl'] = preview[0]['previewUrl']
+                    filtered.append(song)
+        return filtered
+    return []
+
 @app.route('/')
 def home():
-    return render_template('home.html')
+    top_songs = get_itunes_top_songs(region="us", limit=15)
+    return render_template('home.html', top_songs=top_songs)
 
-@app.route('/search', methods=['GET','POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get('q') or request.form.get('q')
     results = []
     if query:
-        url = "https://itunes.apple.com/search"
-        params = {'term': query, 'media': 'music', 'limit': 20}
-        r = requests.get(url, params=params)
-        if r.status_code == 200:
-            results = r.json().get('results', [])
+        results = search_itunes(query)
     return render_template('index.html', results=results, query=query)
 
-@app.route('/recommend', methods=['GET','POST'])
+@app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
-    genre = request.form.get('genre') or 'pop'
-    mood = request.form.get('mood') or ''
-    activity = request.form.get('activity') or ''
-    country = request.form.get('country') or ''
-    time_of_day = request.form.get('time_of_day') or ''
+    recommendations = []
+    if request.method == 'POST':
+        genre = request.form.get('genre')
+        mood = request.form.get('mood')
+        activity = request.form.get('activity')
+        country = request.form.get('country')
 
-    # Первый запрос — по жанру как ключевому слову
-    base_query = genre
-    url = "https://itunes.apple.com/search"
-    params = {'term': base_query, 'media': 'music', 'limit': 20}
-    resp = requests.get(url, params=params)
-    recs = []
-    if resp.status_code == 200:
-        recs = resp.json().get('results', [])
+        queries = [
+            f"{genre} {mood} {activity} {country}",
+            f"{genre} {mood} {activity}",
+            f"{genre} {mood}",
+            f"{genre}"
+        ]
+        seen = set()
+        for q in queries:
+            results = search_itunes(q, limit=10)
+            for r in results:
+                if r.get("previewUrl") and r['trackId'] not in seen:
+                    recommendations.append(r)
+                    seen.add(r['trackId'])
+        recommendations = recommendations[:20]
+    return render_template('recommend.html', recommendations=recommendations)
 
-    # Извлекаем жанры / теги из первых результатов
-    tags = set()
-    for track in recs:
-        # Например, primaryGenreName
-        g = track.get('primaryGenreName')
-        if g:
-            tags.add(g)
-        # Можно также анализировать часть trackName, artistName как ключевые слова
-        name = track.get('trackName')
-        if name:
-            for w in name.split():
-                tags.add(w)
-
-    # Используем лучшие теги + остальные параметры для уточнения
-    # Формируем итоговый запрос
-    extra = []
-    if mood:
-        extra.append(mood)
-    if activity:
-        extra.append(activity)
-    if country:
-        extra.append(country)
-    if time_of_day:
-        extra.append(time_of_day)
-
-    # Собираем запросы по тегам + доп. условия
-    # Например, первые 3 наиболее частых тега
-    selected_tags = list(tags)[:3]
-    query_parts = selected_tags + extra
-
-    final_query = " ".join(query_parts)
-
-    params2 = {'term': final_query, 'media': 'music', 'limit': 15}
-    resp2 = requests.get(url, params=params2)
-    final_recs = []
-    if resp2.status_code == 200:
-        final_recs = resp2.json().get('results', [])
-
-    # Если всё ещё мало, fallback к простому жанру
-    if len(final_recs) < 5:
-        params2['term'] = genre
-        resp3 = requests.get(url, params=params2)
-        if resp3.status_code == 200:
-            final_recs += resp3.json().get('results', [])
-
-    # Убедимся, что нет дубликатов
-    seen = set()
-    unique_recs = []
-    for t in final_recs:
-        tid = t.get('trackId')
-        if tid and tid not in seen:
-            seen.add(tid)
-            unique_recs.append(t)
-
-    return render_template('recommend.html', recommendations=unique_recs)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
