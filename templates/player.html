@@ -1,14 +1,22 @@
-<div id="player-bar">
-  <img id="player-cover" src="" alt="">
-  <div id="player-info"></div>
-
-  <div id="player-controls">
-    <button onclick="prevTrack()">⏮</button>
-    <button onclick="playPause()">⏯</button>
-    <button onclick="nextTrack()">⏭</button>
-    <button id="shuffle-btn" onclick="toggleShuffle()">🔀</button>
-    <button id="repeat-btn" onclick="toggleRepeat()">🔁</button>
+<div id="player-bar" class="hidden" aria-live="polite">
+  <img id="player-cover" src="" alt="Обложка">
+  <div id="player-info">
+    <strong id="player-title"></strong>
+    <span id="player-artist"></span>
   </div>
 
-  <audio id="player-audio" controls></audio>
+  <div id="player-controls">
+    <button id="btn-prev" title="Previous">⏮</button>
+    <button id="btn-play" title="Play/Pause">▶</button>
+    <button id="btn-next" title="Next">⏭</button>
+    <button id="btn-repeat" title="Repeat">🔁</button>
+    <button id="btn-shuffle" title="Shuffle">🔀</button>
+  </div>
+
+  <div id="player-progress-wrap">
+    <div id="player-progress-bg"><div id="player-progress"></div></div>
+    <div id="player-time">0:00 / 0:00</div>
+  </div>
+
+  <audio id="player-audio" preload="none"></audio>
 </div>

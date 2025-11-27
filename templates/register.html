@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-panel">
+  <h2>Регистрация</h2>
+  <form method="post" action="{{ url_for('register') }}">
+    <label>Имя пользователя <input name="username" required></label>
+    <label>Отображаемое имя <input name="display"></label>
+    <label>Пароль <input name="password" type="password" required></label>
+    <div class="actions">
+      <button class="btn" type="submit">Зарегистрироваться</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

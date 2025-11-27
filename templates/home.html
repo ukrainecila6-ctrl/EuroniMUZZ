@@ -1,45 +1,43 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EuroniMUZZ</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-</head>
-<body>
-  <header>
-    <h1>EuroniMUZZ</h1>
-    <p>Музыка для твоего настроения</p>
-    <a href="{{ url_for('search') }}" class="btn">Поиск</a>
-    <a href="{{ url_for('recommend') }}" class="btn">Рекомендации</a>
-  </header>
+{% extends "base.html" %}
+{% block content %}
+<section class="hero-card">
+  <div>
+    <h2>Добро пожаловать в EuroniMUZZ</h2>
+    <p class="lead">Ищите музыку, получайте персональные подборки и сохраняйте свои предпочтения — всё в одном месте.</p>
+    <div class="hero-actions">
+      <a class="btn" href="{{ url_for('search') }}">Поиск треков</a>
+      <a class="btn" href="{{ url_for('recommend') }}">Получить рекомендации</a>
+    </div>
+  </div>
 
-  <main>
-    <section>
-      <h2>🔥 Популярное прямо сейчас</h2>
-      <ul class="top-list">
-        {% for song in top_songs %}
-          <li class="track-card">
-            <img src="{{ song.artworkUrl100 }}" alt="{{ song.name }}">
-            <strong>{{ song.name }}</strong><br>
-            <span>{{ song.artistName }}</span><br>
-            <button
-              class="btn track-button"
-              data-url="{{ song.url }}"
-              data-name="{{ song.name }}"
-              data-artist="{{ song.artistName }}"
-              data-cover="{{ song.artworkUrl100 }}"
-              onclick="playTrack('{{ song.url }}', '{{ song.name }}', '{{ song.artistName }}', '{{ song.artworkUrl100 }}', {{ loop.index0 }})">
-              ▶️ Слушать
-            </button>
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-  </main>
+  <div class="hero-features">
+    <div class="feature">
+      <h3>Персональные подборки</h3>
+      <p>Система запоминает ваши предпочтения через cookie и подбирает музыку под ваш вкус.</p>
+    </div>
+    <div class="feature">
+      <h3>Умный плеер</h3>
+      <p>Плеер появляется снизу и играет превью треков прямо на сайте.</p>
+    </div>
+    <div class="feature">
+      <h3>Современный интерфейс</h3>
+      <p>Адаптивный дизайн и удобная анкета для точных рекомендаций.</p>
+    </div>
+  </div>
+</section>
 
-  {% include 'player.html' %}
-  <footer>© 2025 EuroniMUZZ</footer>
-</body>
-</html>
+{% if personal_recs %}
+<section>
+  <h3>Подборка для вас (на основе истории)</h3>
+  <ul class="results-grid">
+    {% for s in personal_recs %}
+      <li class="track-item" data-preview="{{ s.previewUrl }}" data-title="{{ s.trackName }}" data-artist="{{ s.artistName }}" data-cover="{{ s.artworkUrl100 }}">
+        <img class="cover" src="{{ s.artworkUrl100 }}" alt="{{ s.trackName }}">
+        <div class="meta"><strong>{{ s.trackName }}</strong><span>{{ s.artistName }}</span></div>
+        <button class="play-btn">▶ Слушать</button>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

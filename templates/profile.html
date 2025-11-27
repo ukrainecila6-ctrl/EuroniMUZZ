@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Профиль</h2>
+  {% if user %}
+    <p>Вы — <strong>{{ user }}</strong></p>
+  {% else %}
+    <p class="muted">Вы не вошли в систему.</p>
+  {% endif %}
+
+  <h3>История рекомендаций (cookie)</h3>
+  <pre style="white-space:pre-wrap; background:rgba(255,255,255,0.03); padding:1rem; border-radius:8px;">
+{{ history | tojson(indent=2, ensure_ascii=False) }}
+  </pre>
+</section>
+{% endblock %}

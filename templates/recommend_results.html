@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="recommend-section">
+  <h2>Рекомендации</h2>
+  {% if recommendations %}
+    <p class="muted">Вот что мы подобрали для вас — нажмите «Слушать» чтобы воспроизвести превью.</p>
+    <ul class="results-grid">
+      {% for s in recommendations %}
+        <li class="track-item" data-preview="{{ s.previewUrl }}" data-title="{{ s.trackName }}" data-artist="{{ s.artistName }}" data-cover="{{ s.artworkUrl100 }}">
+          <img class="cover" src="{{ s.artworkUrl100 }}" alt="{{ s.trackName }}">
+          <div class="meta">
+            <strong>{{ s.trackName }}</strong>
+            <span>{{ s.artistName }}</span>
+          </div>
+          <button class="play-btn">▶ Слушать</button>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">К сожалению, ничего не найдено по вашему запросу.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="panel">
-  <h2>Поиск музыки</h2>
-  <form class="search-form" method="post" action="{{ url_for('search') }}">
+<section class="search-area">
+  <h2>Поиск</h2>
+  <form class="search-form" method="post">
     <input type="text" name="q" placeholder="Название или исполнитель" value="{{ query|default('') }}" required>
     <button class="btn" type="submit">Найти</button>
   </form>
 
   {% if results %}
-  <h3>Результаты</h3>
-  <ul class="results-grid">
+    <ul class="results-grid">
     {% for r in results %}
       <li class="track-item" data-preview="{{ r.previewUrl }}" data-title="{{ r.trackName }}" data-artist="{{ r.artistName }}" data-cover="{{ r.artworkUrl100 }}">
         <img class="cover" src="{{ r.artworkUrl100 }}" alt="{{ r.trackName }}">
@@ -21,9 +20,7 @@
         {% endif %}
       </li>
     {% endfor %}
-  </ul>
-  {% else %}
-    <p class="muted">Здесь будут результаты поиска.</p>
+    </ul>
   {% endif %}
 </section>
 {% endblock %}

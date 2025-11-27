@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EuroniMUZZ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="{{ url_for('home') }}"><h1>EuroniMUZZ</h1></a>
+        <p class="tag">Музыка для настроения</p>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-link" href="{{ url_for('home') }}">Главная</a>
+        <a class="nav-link" href="{{ url_for('search') }}">Поиск</a>
+        <a class="nav-link" href="{{ url_for('recommend') }}">Рекомендации</a>
+        <a class="nav-link" href="{{ url_for('profile') }}">Профиль</a>
+      </nav>
+
+      <div class="auth">
+        {% if session.get('user') %}
+          <span class="user-name">Привет, {{ USERS.get(session.get('user')).get('display') if session.get('user') in USERS else session.get('user') }}</span>
+          <a class="btn small" href="{{ url_for('logout') }}">Выйти</a>
+        {% else %}
+          <a class="btn small" href="{{ url_for('login') }}">Войти</a>
+          <a class="btn small hollow" href="{{ url_for('register') }}">Регистрация</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-area">
+          {% for cat, msg in messages %}
+            <div class="flash flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'player.html' %}
+
+  <footer class="site-footer">
+    <div class="container">© 2025 EuroniMUZZ</div>
+  </footer>
+</body>
+</html>
